@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Animal;
 use Illuminate\Http\Request;
+// 要 Response 的話要加這段
 use Symfony\Component\HttpFoundation\Response;
 
 class AnimalController extends Controller
@@ -83,8 +84,13 @@ class AnimalController extends Controller
      * @param  \App\Animal  $animal
      * @return \Illuminate\Http\Response
      */
+
+    // 路由有設定 animal 變數，這裡設定它是 Animal 模型，所以會自動找出該ID的實體物件
     public function destroy(Animal $animal)
     {
-        //
+        //把這個實體物件刪除
+        $animal->delete();
+        // 回傳 null 並且給予 204 狀態碼
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }
