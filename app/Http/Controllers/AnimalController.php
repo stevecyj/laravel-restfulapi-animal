@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Animal;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AnimalController extends Controller
 {
@@ -37,6 +38,9 @@ class AnimalController extends Controller
     {
         //Animal Model 有 create 寫好的方法，把請求的內容，用all方法轉為陣列，傳入 create 方法中。
         $animal = Animal::create($request->all());
+
+        // 回傳 animal 產生出來的實體物件資料，第二個參數設定狀態碼，可以直接寫 201 表示創建成功的狀態碼或用下面 Response 功能
+        return response($animal, Response::HTTP_CREATED);
     }
 
     /**
