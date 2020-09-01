@@ -14,10 +14,16 @@ class AnimalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        // 設定 返回多少項目、指定從哪一個id開始的預設值
+        $marker = $request->marker==null ? 1:$request->marker;
+        $limit = $request->limit==null ? 10:$request->limit;
         //查詢全部
-        $animals=Animal::get();
+        $animals=Animal::orderBy('id','asc')
+          ->where('id','>=',$marker)
+          ->limit($limit)
+          ->get();
         return response(['animals' => $animals], Response::HTTP_OK);
     }
 
