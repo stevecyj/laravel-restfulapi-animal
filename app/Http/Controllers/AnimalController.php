@@ -22,8 +22,8 @@ class AnimalController extends Controller
         //查詢全部
         $animals=Animal::orderBy('id','asc')
           ->where('id','>=',$marker)
-          ->limit($limit)
-          ->get();
+          ->paginate($limit);
+
         return response(['animals' => $animals], Response::HTTP_OK);
     }
 
