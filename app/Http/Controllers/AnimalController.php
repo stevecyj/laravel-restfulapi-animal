@@ -17,12 +17,22 @@ class AnimalController extends Controller
     public function index(Request $request)
     {
         // 設定 返回多少項目、指定從哪一個id開始的預設值
-        $marker = $request->marker==null ? 1:$request->marker;
-        $limit = $request->limit==null ? 10:$request->limit;
-        //查詢全部
-        $animals=Animal::orderBy('id','asc')
-          ->where('id','>=',$marker)
-          ->paginate($limit);
+        $marker = isset($request->marker) ? $request->marker : 1;
+        $limit = isset($request->limit) ? $request->limit : 10;
+
+        $query = Animal::query();
+
+        // 篩選欄位條件
+        if (isset($request->filters)) {
+            $filters = explode(',', $request->filters);
+            foreach ($filters as $key => $filter) {
+                list($criteria, $value) = explode(':', $filter);
+                $query->where($criteria, 'like', "%$value%");
+
+            }
+        }
+
+        $animals = $query->where('id', '>=', $marker)->paginate($limit);
 
         return response(['animals' => $animals], Response::HTTP_OK);
     }
