@@ -27,27 +27,27 @@ class AnimalController extends Controller
             $filters = explode(',', $request->filters);
             foreach ($filters as $key => $filter) {
                 list($criteria, $value) = explode(':', $filter);
-                $query->where($criteria, $value);
+                $query->where($criteria, 'like', "%$value%");
 
             }
         }
 
         //排列順序
         if (isset($request->sort)) {
-            $sorts = explode(',', $request->sort);
-            foreach ($sorts as $key => $sort) {
-                list($criteria, $value) = explode(':', $sort);
-                if ($value == 'asc' || $value == 'desc') {
-                    $query->orderBy($criteria, $value);
-                }
+        $sorts = explode(',', $request->sort);
+        foreach ($sorts as $key => $sort) {
+            list($criteria, $value) = explode(':', $sort);
+            if ($value == 'asc' || $value == 'desc') {
+                $query->orderBy($criteria, $value);
             }
-        } else {
-            $query->orderBy('id', 'asc');
         }
+      } else {
+          $query->orderBy('id', 'asc');
+      }
 
         $animals = $query->where('id', '>=', $marker)->paginate($limit);
 
-        return response(['animals' => $animals], Response::HTTP_OK);
+        return response($animals, Response::HTTP_OK);
     }
 
     /**

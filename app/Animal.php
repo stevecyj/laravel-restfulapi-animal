@@ -16,4 +16,12 @@ class Animal extends Model
       'description',
       'personality',
     ];
+
+    /**
+     * 取得動物的分類
+     */
+    public function type()
+    {
+        return $this->belongsTo('App\Type');
+    }
 }
