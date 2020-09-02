@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 // 要 Response 的話要加這段
 use Symfony\Component\HttpFoundation\Response;
 
+// Resource 轉換格式
+use App\Http\Resources\AnimalResource;
+
 class AnimalController extends Controller
 {
     /**
@@ -94,8 +97,8 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal)
     {
-        //
-        return response($animal, Response::HTTP_OK);
+        // resource 轉換格式
+        return response(new AnimalResource($animal), Response::HTTP_OK);
     }
 
     /**
