@@ -27,9 +27,22 @@ class AnimalController extends Controller
             $filters = explode(',', $request->filters);
             foreach ($filters as $key => $filter) {
                 list($criteria, $value) = explode(':', $filter);
-                $query->where($criteria, 'like', "%$value%");
+                $query->where($criteria, $value);
 
             }
+        }
+
+        //排列順序
+        if (isset($request->sort)) {
+            $sorts = explode(',', $request->sort);
+            foreach ($sorts as $key => $sort) {
+                list($criteria, $value) = explode(':', $sort);
+                if ($value == 'asc' || $value == 'desc') {
+                    $query->orderBy($criteria, $value);
+                }
+            }
+        } else {
+            $query->orderBy('id', 'asc');
         }
 
         $animals = $query->where('id', '>=', $marker)->paginate($limit);
@@ -55,6 +68,17 @@ class AnimalController extends Controller
      */
     public function store(Request $request)
     {
+        // 驗證欄位
+        $this->validate($request, [
+          'type_id' => 'required',
+          'name' => 'required|max:255',
+          'birthday' => 'required|date',
+          'area' => 'required|max:255',
+          'fix' => 'required|boolean',
+          'description' => 'nullable',
+          'personality' => 'nullable'
+        ]);
+
         //Animal Model 有 create 寫好的方法，把請求的內容，用all方法轉為陣列，傳入 create 方法中。
         $animal = Animal::create($request->all());
 
